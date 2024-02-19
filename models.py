@@ -6,4 +6,4 @@ class User(Document):
     password = StringField(required=True)
     role = StringField(required=True)
     
-    meta = {'collection': 'prof_mvc_users'}
+    meta = {'collection': 'prof_mvc_users'} 

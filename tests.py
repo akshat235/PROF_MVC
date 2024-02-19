@@ -33,7 +33,7 @@ import requests
 
 
 
-BASE_URL = 'http://127.0.0.1:5000/questions'
+BASE_URL = 'http://127.0.0.1:5000/questions' 
 
 def get_questions():
     url = f'{BASE_URL}/get-questions'

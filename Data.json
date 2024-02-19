@@ -14,7 +14,7 @@
     "questionId": 3,
     "questionBody": "Who wrote the epic Ramayana?", 
     "options": ["Tulsidas", "Valmiki", "Vyasa", "Kalidasa"],
-    "correctAnswer": "Valmiki"
+    "correctAnswer": "Valmiki" 
   },
   {
     "questionId": 4,

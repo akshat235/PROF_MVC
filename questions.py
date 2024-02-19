@@ -12,4 +12,4 @@ def get_questions():
     except FileNotFoundError:
         return jsonify({'error': 'Data file not found'}), 404
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e)}), 500 

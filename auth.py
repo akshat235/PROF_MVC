@@ -11,7 +11,7 @@ auth_bp = Blueprint("auth", __name__, )
 ph = PasswordHasher(time_cost=4, parallelism=8, hash_len=64)
 
 def get_allowed_emails():
-    allowed_emails = set()
+    allowed_emails = set() 
     with open('studentEmails.txt', 'r') as f:
         for line in f:
             email = line.strip()

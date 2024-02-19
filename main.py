@@ -35,9 +35,7 @@ connect(alias='default', host=app.config['MONGODB_SETTINGS']['host'], db=app.con
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(questions_bp, url_prefix='/questions')
 
-# app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
-# app.register_blueprint(test_bp, url_prefix='/test')
 
-
+ 
 if __name__ == '__main__':
    app.run(debug=True)
