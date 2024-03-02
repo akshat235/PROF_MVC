@@ -1,13 +1,13 @@
 from mongoengine import Document, StringField, SequenceField, ListField, IntField, DictField
 
-
 class User(Document):
-    userID = SequenceField(primary_key=True)
+    userID = SequenceField()
     email = StringField(required=True)
     password = StringField(required=True)
     role = StringField(required=True)
+    classID = StringField()
     
-    meta = {'collection': 'prof_mvc_users'} 
+    meta = {'collection': 'prof_mvc_users'}
 
 class Question(Document):
     questionId = IntField(primary_key=True)
@@ -17,7 +17,7 @@ class Question(Document):
     difficulty = StringField()
     tags = StringField()
     
-    meta = {'collection': 'Questions'} 
+    meta = {'collection': 'Questions'}
 
 
 class Submission(Document):

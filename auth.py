@@ -31,8 +31,11 @@ def register():
         return jsonify({'error': 'Email not allowed to register'}), 403
     if User.objects(email=email).first():
         return jsonify({'error': 'Email already exists'}), 400
+    max_userID = User.objects.order_by('-userID').first().userID if User.objects.count() > 0 else 0
+    next_userID = max_userID + 1
+    
     hashed_password = ph.hash(password)
-    user = User(email=email, password=hashed_password, role=role)
+    user = User(userID=next_userID, email=email, password=hashed_password, role=role)
     user.save()
     return jsonify({'message': 'User registered successfully'}), 201
 
@@ -57,3 +60,22 @@ def check_email():
         return jsonify({'message': 'Email exists in allowed emails'}), 200
     else:
         return jsonify({'error': 'User not allowed to register for the class'}), 404
+    
+    
+    
+    
+@auth_bp.route('/update-classID', methods=['POST'])
+def update_classID():
+    data = request.json
+    email = data.get('email')
+    classID = data.get('classID')
+
+    if not email or not classID:
+        return jsonify({'error': 'email and classID are required'}), 400
+
+    user = User.objects(email=email).first()
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    user.update(set__classID=classID)
+    return jsonify({'message': 'ClassID updated successfully'}), 200

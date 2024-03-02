@@ -8,7 +8,6 @@ questions_bp = Blueprint("questions", __name__)
 @questions_bp.route('/get-questions', methods=['GET'])
 def get_questions():
     try:
-
         questions = Question.objects.all()
         serialized_questions = []
         for question in questions:
@@ -25,7 +24,6 @@ def get_questions():
         return jsonify(serialized_questions), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 
 @questions_bp.route('/get-question', methods=['POST'])
@@ -48,7 +46,7 @@ def get_question():
                 'questionId': question.questionId,
                 'questionBody': question.questionBody,
                 'options': question.options,
-                'correctAnswer': question.correctAnswer,
+                # 'correctAnswer': question.correctAnswer,
                 'difficulty': question.difficulty,
                 'tags': question.tags
             }), 200  
@@ -56,3 +54,31 @@ def get_question():
             return jsonify({'error': 'Question not found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@questions_bp.route('/get-questions-by-ids', methods=['POST'])
+def get_questions_by_ids():
+    data = request.json
+    qids = data.get('qids')
+    if qids is None or not isinstance(qids, list):
+        return jsonify({'error': 'No qids array provided in the request body or qids is not a list'}), 400
+    try:
+        qids = [int(qid) for qid in qids]
+        all_questions = Question.objects()
+        questions = [q for q in all_questions if q.questionId in qids]
+        
+        serialized_questions = []
+        for question in questions:
+            serialized_question = {
+                'questionId': question.questionId,
+                'questionBody': question.questionBody,
+                'options': question.options,
+                'difficulty': question.difficulty,
+                'tags': question.tags
+            }
+            serialized_questions.append(serialized_question)
+        
+        return jsonify(serialized_questions), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+

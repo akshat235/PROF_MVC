@@ -3,13 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from auth import auth_bp
 from questions import questions_bp
 from submission import submissions_bp
-# from test_handler import test_bp
-# from dashboard import dashboard_bp
+from dashboard import dashboard_bp
 from flask_cors import CORS, cross_origin
-# from models import db, Question
 from mongoengine import connect
 import mongoengine
-import sqlalchemy_cockroachdb
 
 
 app = Flask(__name__)
@@ -30,6 +27,7 @@ connect(alias='default', host=app.config['MONGODB_SETTINGS']['host'], db=app.con
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(questions_bp, url_prefix='/questions')
 app.register_blueprint(submissions_bp, url_prefix='/submissions')
+app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
  
 if __name__ == '__main__':
    app.run(debug=True)

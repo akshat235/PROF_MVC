@@ -58,19 +58,6 @@ def get_submissions():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-
-
-# @submissions_bp.route('/tot_progress', methods=['GET'])
-# def tot_progress():
-#     user_id = request.args.get('user_id')
-#     if user_id is None:
-#         return jsonify({'error': 'user_id not provided in the request'}), 400
-#     try:
-#         submissions = Submission.objects(userID=user_id).order_by('-submissionDate', '-submissionTime')
-#         total_scores = [{'totalScore': submission.totalScore, 'date': submission.submissionDate, 'time': submission.submissionTime} for submission in submissions]
-#         return jsonify({'message': 'Total scores retrieved successfully', 'total_scores': total_scores}), 200
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
     
 @submissions_bp.route('/tot_progress', methods=['GET'])
 def tot_progress():
@@ -81,5 +68,26 @@ def tot_progress():
         submissions = Submission.objects(userID=user_id).order_by('-submissionDate', '-submissionTime')
         response_object = [{'totalScore': submission.totalScore, 'date': submission.submissionDate, 'time': submission.submissionTime, 'difficultyScores': submission.difficultyScores} for submission in submissions]
         return jsonify({'message': 'Total scores retrieved successfully', 'response': response_object}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@submissions_bp.route('/last-submission', methods=['GET'])
+def last_submission():
+    user_id = request.args.get('user_id')
+    if user_id is None:
+        return jsonify({'error': 'user_id not provided in the request'}), 400
+    try:
+        submission = Submission.objects(userID=user_id).order_by('-submissionDate', '-submissionTime').first()
+        if submission:
+            response_object = {
+                'totalScore': submission.totalScore,
+                'date': submission.submissionDate,
+                'time': submission.submissionTime,
+                'difficultyScores': submission.difficultyScores
+            }
+            return jsonify({'message': 'Last submission retrieved successfully', 'response': response_object}), 200
+        else:
+            return jsonify({'error': 'No submissions found for the user'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500

@@ -1,4 +1,4 @@
-import requests
+# import requests
 
 # BASE_URL = 'http://127.0.0.1:5000/auth'
 
@@ -8,6 +8,8 @@ import requests
 #     response = requests.post(url, json=data)
 #     if response:
 #         print(response.json())
+
+# register('test3@gmail.com', 'password123', 'Student')
 
 
 # def login(email, password):
@@ -25,7 +27,6 @@ import requests
 #         print(response.json())
 
 
-# register('test1@gmail.com', 'password123', 'Student')
 # # login('test@gmail.com', 'password123')
 # check_email('test@gmail.com')
 
@@ -109,18 +110,106 @@ import requests
 
 
 
+# import requests
+
+# def test_tot_progress():
+#     url = 'http://localhost:5000/submissions/tot_progress'
+#     user_id = '654321'
+#     response = requests.get(url, params={'user_id': user_id})
+#     assert response.status_code == 200
+#     assert 'Total scores retrieved successfully' in response.json()['message']
+#     # assert 'total_scores' in response.json()
+#     print(response.json())
+#     print("Test passed: tot_progress endpoint works as expected.")
+
+# test_tot_progress()
+
+
+# import requests
+
+# def test_get_questions_by_ids():
+#     url = 'http://localhost:5000/questions/get-questions-by-ids'
+#     qids = [3, 4, 9]
+#     data = {'qids': qids}
+#     response = requests.post(url, json=data)
+    
+#     # Check if the request was successful
+#     assert response.status_code == 200
+#     # Check if the response contains the expected number of questions
+#     # assert len(response.json()) == len(qids)
+#     # Optionally, check if the response contains the expected data structure for each question
+#     for question in response.json():
+#         assert 'questionId' in question
+#         assert 'questionBody' in question
+#         assert 'options' in question
+#         assert 'difficulty' in question
+#     print("Test passed: get-questions-by-ids endpoint works as expected.")
+#     print(response.json())
+
+
+# # Call the test function
+# test_get_questions_by_ids()
+
+
+
+
+# import requests
+
+# def test_last_submission():
+#     url = 'http://localhost:5000/submissions/last-submission'
+#     user_id = '654321'
+#     response = requests.get(url, params={'user_id': user_id})
+#     assert response.status_code == 200
+#     assert 'Last submission retrieved successfully' in response.json()['message']
+#     assert 'response' in response.json()
+#     print("Test passed: last-submission endpoint works as expected.")
+#     print(response.json())
+
+# test_last_submission()
+# import requests
+
+# def test_update_classID():
+#     url = 'http://127.0.0.1:5000/auth/update-classID'
+#     data = {
+#         'email': 'test3@gmail.com',
+#         'classID': '12345'
+#     }
+#     response = requests.post(url, json=data)
+#     response_data = response.json()
+#     print(response.json())
+#     print("Test passed: update-classID endpoint works as expected.")
+    
+# test_update_classID()
+
+# import requests
+# import json
+
+# def test_register():
+#     url = 'http://127.0.0.1:5000/auth/register'
+#     data = {
+#         'email': 'test5@gmail.com',
+#         'password': 'password123',
+#         'role': 'Student'
+#     }
+#     response = requests.post(url, json=data)
+    
+#     # Print the response status code and JSON data
+#     print("Response Status Code:", response.status_code)
+#     print("Response Data:", response.json())
+
+# # Call the test function
+# test_register()
+
 import requests
 
-def test_tot_progress():
-    url = 'http://localhost:5000/submissions/tot_progress'
-    user_id = '654321'
-    response = requests.get(url, params={'user_id': user_id})
-    assert response.status_code == 200
-    assert 'Total scores retrieved successfully' in response.json()['message']
-    # assert 'total_scores' in response.json()
-    print(response.json())
-    print("Test passed: tot_progress endpoint works as expected.")
+def test_highest_scores():
+    url = 'http://127.0.0.1:5000/dashboard/highest-scores'
+    classID = '12345' 
+    response = requests.get(url, params={'classID': classID})
+    if response:
+        # Print the response status code and JSON data
+        print("Response Status Code:", response.status_code)
+        print("Response Data:", response.json())
 
-test_tot_progress()
-
-
+# Call the test function
+test_highest_scores()
