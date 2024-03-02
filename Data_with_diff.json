@@ -1,0 +1,162 @@
+[
+    {
+       "questionId": 1,
+       "questionBody": "Which of the following is an example of an oxidation reaction?",
+       "options": ["Mg + O2 → MgO", "2H2 + O2 → 2H2O", "CaCO3 → CaO + CO2", "NaCl → Na + Cl"],
+       "correctAnswer": "Mg + O2 → MgO",
+       "difficulty": "Medium",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 2,
+       "questionBody": "If f(x) = 2x + 3, what is f(5)?",
+       "options": ["11", "13", "15", "17"],
+       "correctAnswer": "13",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 3,
+       "questionBody": "Who wrote the epic Ramayana?",
+       "options": ["Tulsidas", "Valmiki", "Vyasa", "Kalidasa"],
+       "correctAnswer": "Valmiki",
+       "difficulty": "Hard",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 4,
+       "questionBody": "What is the national animal of India?",
+       "options": ["Tiger", "Lion", "Elephant", "Peacock"],
+       "correctAnswer": "Tiger",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 5,
+       "questionBody": "Which of the following gases is most abundant in the earth's atmosphere?",
+       "options": ["Nitrogen", "Oxygen", "Carbon dioxide", "Argon"],
+       "correctAnswer": "Nitrogen",
+       "difficulty": "Medium",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 6,
+       "questionBody": "Who was the first woman to climb Mount Everest?",
+       "options": ["Junko Tabei", "Bachendri Pal", "Santosh Yadav", "Dickie Dolma"],
+       "correctAnswer": "Junko Tabei",
+       "difficulty": "Hard",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 7,
+       "questionBody": "What is the smallest continent on Earth?",
+       "options": ["Australia", "Antarctica", "Europe", "Africa"],
+       "correctAnswer": "Australia",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 8,
+       "questionBody": "In which state is the Ajanta Cave situated?",
+       "options": ["Rajasthan", "Maharashtra", "Madhya Pradesh", "Gujarat"],
+       "correctAnswer": "Maharashtra",
+       "difficulty": "Medium",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 9,
+       "questionBody": "Who invented the telephone?",
+       "options": ["Thomas Edison", "Alexander Graham Bell", "Nikola Tesla", "Guglielmo Marconi"],
+       "correctAnswer": "Alexander Graham Bell",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 10,
+       "questionBody": "What is the capital of Australia?",
+       "options": ["Sydney", "Melbourne", "Canberra", "Perth"],
+       "correctAnswer": "Canberra",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 11,
+       "questionBody": "Who wrote the famous novel 'Moby Dick'?",
+       "options": ["Mark Twain", "Jules Verne", "Herman Melville", "Alexandre Dumas"],
+       "correctAnswer": "Herman Melville",
+       "difficulty": "Medium",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 12,
+       "questionBody": "Which planet is closest to the sun?",
+       "options": ["Mercury", "Venus", "Earth", "Mars"],
+       "correctAnswer": "Mercury",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 13,
+       "questionBody": "Who invented the World Wide Web?",
+       "options": ["Tim Berners-Lee", "Larry Page", "Sergey Brin", "Steve Jobs"],
+       "correctAnswer": "Tim Berners-Lee",
+       "difficulty": "Medium",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 14,
+       "questionBody": "What is the smallest bone in the human body?",
+       "options": ["Stapes", "Incus", "Malleus", "Capitate"],
+       "correctAnswer": "Stapes",
+       "difficulty": "Hard",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 15,
+       "questionBody": "Which city hosted the 1896 Summer Olympics?",
+       "options": ["Athens", "Paris", "London", "Rome"],
+       "correctAnswer": "Athens",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 16,
+       "questionBody": "Who wrote the Indian national anthem 'Jana Gana Mana'?",
+       "options": ["Rabindranath Tagore", "Bankim Chandra Chattopadhyay", "Sarojini Naidu", "Muhammad Iqbal"],
+       "correctAnswer": "Rabindranath Tagore",
+       "difficulty": "Medium",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 17,
+       "questionBody": "What is the SI unit of pressure?",
+       "options": ["Pascal", "Bar", "Torr", "Atmosphere"],
+       "correctAnswer": "Pascal",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 18,
+       "questionBody": "Which of these numbers is a prime number?",
+       "options": ["9", "11", "15", "23"],
+       "correctAnswer": "11",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 19,
+       "questionBody": "What is the smallest ocean in the world?",
+       "options": ["Arctic Ocean", "Atlantic Ocean", "Indian Ocean", "Southern Ocean"],
+       "correctAnswer": "Arctic Ocean",
+       "difficulty": "Medium",
+       "tags":"Random_Tag"
+    },
+    {
+       "questionId": 20,
+       "questionBody": "Who is the author of the Harry Potter book series?",
+       "options": ["J.K. Rowling", "Stephen King", "Dan Brown", "Nora Roberts"],
+       "correctAnswer": "J.K. Rowling",
+       "difficulty": "Easy",
+       "tags":"Random_Tag"
+    }
+]

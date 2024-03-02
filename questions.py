@@ -16,14 +16,15 @@ def get_questions():
                 'questionId': question.questionId,
                 'questionBody': question.questionBody,
                 'options': question.options,
-                'correctAnswer': question.correctAnswer
+                'correctAnswer': question.correctAnswer,
+                'difficulty': question.difficulty,
+                'tags': question.tags
             }
             serialized_questions.append(serialized_question)
 
         return jsonify(serialized_questions), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 
 
@@ -34,12 +35,10 @@ def get_question():
     
     if qid is None:
         return jsonify({'error': 'No qid provided in the request body'}), 400
-    
     try:
         qid = int(qid)
     except ValueError:
         return jsonify({'error': 'Invalid qid provided'}), 400
-    
     try:
         all_questions = Question.objects()
         question = next((q for q in all_questions if q.questionId == qid), None)
@@ -49,7 +48,9 @@ def get_question():
                 'questionId': question.questionId,
                 'questionBody': question.questionBody,
                 'options': question.options,
-                'correctAnswer': question.correctAnswer
+                'correctAnswer': question.correctAnswer,
+                'difficulty': question.difficulty,
+                'tags': question.tags
             }), 200  
         else:
             return jsonify({'error': 'Question not found'}), 404

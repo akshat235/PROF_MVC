@@ -62,22 +62,65 @@ import requests
 # # Testing get_question with a sample question ID
 # get_question(1)
 
+
+# import requests
+# import json
+
+# BASE_URL = 'http://127.0.0.1:5000/submissions/submit-response'
+
+# def submit_response(user_id, responses):
+#     data = {'userID': user_id, 'responses': responses}
+#     response = requests.post(BASE_URL, json=data)
+#     if response.status_code == 201:
+#         print("Response submitted successfully")
+#         submission_data = response.json().get('submission')
+#         print("Submission details:")
+#         print(json.dumps(submission_data, indent=4))
+#     else:
+#         print("Error:", response.json())
+# user_id = "654321"
+# responses = [
+#     {"questionID": 1, "selectedOption": "Mg + O2 → MgO", "difficulty": "Easy"},
+#     {"questionID": 2, "selectedOption": "11", "difficulty": "Medium"},
+#     {"questionID": 18, "selectedOption": "11", "difficulty": "Hard"},
+#     {"questionID": 10, "selectedOption": "J.K. Rowling", "difficulty": "Easy"}
+# ]
+# submit_response(user_id, responses)
+
+
+
+# import requests
+
+# def test_get_submissions_by_userID():
+#     url = 'http://localhost:5000/submissions/get-submissions-by-userID'
+#     user_id = '654321'
+#     response = requests.get(url, params={'user_id': user_id})
+#     print(response.json())
+    
+#     assert response.status_code == 200
+#     assert 'Submissions retrieved successfully' in response.json()['message']
+#     assert 'test_scores' in response.json()
+#     print("Test passed: get-submissions-by-userID endpoint works as expected.")
+
+
+# # Call the test function
+# test_get_submissions_by_userID()
+
+
+
+
 import requests
-import json
 
-BASE_URL = 'http://127.0.0.1:5000/submissions/submit-response'
+def test_tot_progress():
+    url = 'http://localhost:5000/submissions/tot_progress'
+    user_id = '654321'
+    response = requests.get(url, params={'user_id': user_id})
+    assert response.status_code == 200
+    assert 'Total scores retrieved successfully' in response.json()['message']
+    # assert 'total_scores' in response.json()
+    print(response.json())
+    print("Test passed: tot_progress endpoint works as expected.")
 
-def submit_response(user_id, responses):
-    data = {'userID': user_id, 'responses': responses}
-    response = requests.post(BASE_URL, json=data)
-    if response.status_code == 201:
-        print("Response submitted successfully")
-        submission_data = response.json().get('submission')
-        print("Submission details:")
-        print(json.dumps(submission_data, indent=4))
-    else:
-        print("Error:", response.json())
-        
-user_id = "123456"
-responses = [{"questionID": "1", "selectedOption": "Mg + O2 → MgO"}, {"questionID": "2", "selectedOption": "13"}] 
-submit_response(user_id, responses)
+test_tot_progress()
+
+
