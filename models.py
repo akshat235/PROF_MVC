@@ -7,6 +7,15 @@ class User(Document):
     role = StringField(required=True)
     classID = StringField()
     
+    def to_json(self):
+        return {
+            'userID': self.userID,
+            'email': self.email,
+            'role': self.role,
+            'classID': self.classID
+        }
+    
+    
     meta = {'collection': 'prof_mvc_users'}
 
 class Question(Document):
@@ -21,7 +30,7 @@ class Question(Document):
 
 
 class Submission(Document):
-    userID = StringField(required=True)
+    userID = IntField(required=True)
     responses = ListField(DictField(), required=True)
     totalScore = IntField()
     difficultyScores = DictField()

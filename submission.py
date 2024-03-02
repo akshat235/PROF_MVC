@@ -50,9 +50,7 @@ def get_submissions():
     if user_id is None:
         return jsonify({'error': 'user_id not provided in the request'}), 400
     try:
-        # Fetch all submissions for the given user_id
         submissions = Submission.objects(userID=user_id)
-        # Extract test scores from each submission
         test_scores = [{'totalScore': submission.totalScore, 'difficultyScores': submission.difficultyScores} for submission in submissions]
         return jsonify({'message': 'Submissions retrieved successfully', 'test_scores': test_scores}), 200
     except Exception as e:

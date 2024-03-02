@@ -1,15 +1,15 @@
-# import requests
+import requests
 
 # BASE_URL = 'http://127.0.0.1:5000/auth'
 
 # def register(email, password, role):
 #     url = f'{BASE_URL}/register'
-#     data = {'email': email, 'password': password, 'role': role}
+#     data = {'email': email, 'password': password, 'role': role, 'classID':"54321"}
 #     response = requests.post(url, json=data)
 #     if response:
 #         print(response.json())
 
-# register('test3@gmail.com', 'password123', 'Student')
+# register('test5@gmail.com', 'password123', 'Student')
 
 
 # def login(email, password):
@@ -200,16 +200,61 @@
 # # Call the test function
 # test_register()
 
+# import requests
+
+# def test_highest_scores():
+#     url = 'http://127.0.0.1:5000/dashboard/highest-scores'
+#     classID = '54321' 
+#     response = requests.get(url, params={'classID': classID})
+#     if response:
+#         # Print the response status code and JSON data
+#         print("Response Status Code:", response.status_code)
+#         print("Response Data:", response.json())
+
+# # Call the test function
+# test_highest_scores()
+
+# import requests
+
+# url = "http://localhost:5000/dashboard/add-email"
+# data = {"email": "test9@gmail.com"}
+
+# response = requests.post(url, json=data)
+
+# print(response.status_code)
+# print(response.json())
+
+# import requests
+
+# url = "http://localhost:5000/dashboard/remove-email"
+# data = {"email": "test7@gmail.com"}
+
+# response = requests.post(url, json=data)
+
+# print(response.status_code)
+# print(response.json())
+
+
+
+
+# import requests
+
+# url = "http://localhost:5000/dashboard/highest-average-scores"
+# params = {"classID": "12345"}
+
+# response = requests.get(url, params=params)
+
+# print(response.status_code)
+# print(response.json())
+
 import requests
 
-def test_highest_scores():
-    url = 'http://127.0.0.1:5000/dashboard/highest-scores'
-    classID = '12345' 
-    response = requests.get(url, params={'classID': classID})
-    if response:
-        # Print the response status code and JSON data
-        print("Response Status Code:", response.status_code)
-        print("Response Data:", response.json())
+url = "http://localhost:5000/auth/user-details"
+# params = {"userID": 8} # Assuming userID 8 exists in your database
+# params = {"email": "test2@gmail.com"}
+params = {"classID": "54321"}
 
-# Call the test function
-test_highest_scores()
+response = requests.get(url, params=params)
+
+print(response.status_code)
+print(response.json())
