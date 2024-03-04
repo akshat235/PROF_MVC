@@ -64,29 +64,29 @@ import requests
 # get_question(1)
 
 
-# import requests
-# import json
+import requests
+import json
 
-# BASE_URL = 'http://127.0.0.1:5000/submissions/submit-response'
+BASE_URL = 'http://127.0.0.1:5000/submissions/submit-response'
 
-# def submit_response(user_id, responses):
-#     data = {'userID': user_id, 'responses': responses}
-#     response = requests.post(BASE_URL, json=data)
-#     if response.status_code == 201:
-#         print("Response submitted successfully")
-#         submission_data = response.json().get('submission')
-#         print("Submission details:")
-#         print(json.dumps(submission_data, indent=4))
-#     else:
-#         print("Error:", response.json())
-# user_id = "654321"
-# responses = [
-#     {"questionID": 1, "selectedOption": "Mg + O2 → MgO", "difficulty": "Easy"},
-#     {"questionID": 2, "selectedOption": "11", "difficulty": "Medium"},
-#     {"questionID": 18, "selectedOption": "11", "difficulty": "Hard"},
-#     {"questionID": 10, "selectedOption": "J.K. Rowling", "difficulty": "Easy"}
-# ]
-# submit_response(user_id, responses)
+def submit_response(user_id, responses):
+    data = {'userID': user_id, 'responses': responses}
+    response = requests.post(BASE_URL, json=data)
+    if response.status_code == 201:
+        print("Response submitted successfully")
+        submission_data = response.json().get('submission')
+        print("Submission details:")
+        print(json.dumps(submission_data, indent=4))
+    else:
+        print("Error:", response.json())
+user_id = "654321"
+responses = [
+    {"questionID": 1, "selectedOption": "Mg + O2 → MgO", "difficulty": "Easy"},
+    {"questionID": 2, "selectedOption": "11", "difficulty": "Medium"},
+    {"questionID": 18, "selectedOption": "11", "difficulty": "Hard"},
+    {"questionID": 10, "selectedOption": "J.K. Rowling", "difficulty": "Easy"}
+]
+submit_response(user_id, responses)
 
 
 
@@ -247,14 +247,14 @@ import requests
 # print(response.status_code)
 # print(response.json())
 
-import requests
+# import requests
 
-url = "http://localhost:5000/auth/user-details"
-# params = {"userID": 8} # Assuming userID 8 exists in your database
-# params = {"email": "test2@gmail.com"}
-params = {"classID": "54321"}
+# url = "http://localhost:5000/auth/user-details"
+# # params = {"userID": 8} # Assuming userID 8 exists in your database
+# # params = {"email": "test2@gmail.com"}
+# params = {"classID": "54321"}
 
-response = requests.get(url, params=params)
+# response = requests.get(url, params=params)
 
-print(response.status_code)
-print(response.json())
+# print(response.status_code)
+# print(response.json())
