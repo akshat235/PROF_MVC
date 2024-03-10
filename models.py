@@ -39,3 +39,10 @@ class Submission(Document):
     
     meta = {'collection': 'TestSubmissions'}
 
+class Scores(Document):
+
+    user_id = IntField(required=True)
+    section_scores = DictField()
+
+    meta = {'collection': 'user_scores'}
+

@@ -1,89 +1,136 @@
 import random
-import pymongo
+from pymongo import MongoClient
+import pandas as pd
 
-class Rec:
-    def __init__(self, user_id):
-        self.user_id = user_id
+
+class rec:
+
+    def __init__(self, user_id) -> None:
         
-        self.db_client = pymongo.MongoClient('mongodb://localhost:27017/')
-        self.db = self.db_client['your_database_name']
-        self.collection = self.db['your_collection_name']
+        self.user_id = user_id
+        self.treshold_easy = 25
+        self.treshold_medium = 25
+        self.penalty = 1
+        db_name = 'sd'#change this
+        self.mongo_client = MongoClient() # add URL here
+        self.db = self.mongo_client[db_name]#add db name here
 
 
-    def get_user_scores_from_db(self):
-        # Query the database to retrieve user scores based on user_id
-        # Example implementation:
+    def get_prev(self):
 
-        self.collection = self.db['your_collection_name'] #change this
-        user_scores = {
-            'Section A': {'easy': 0, 'medium': 0, 'difficult': 0},
-            'Section B': {'easy': 0, 'medium': 0, 'difficult': 0}
-        }
-        return user_scores
-
-    def update_user_scores_in_db(self):
-       
-       self.collection = self.db['your_collection_name'] #change this
-       for section, scores in self.user_scores.items():
-            for difficulty, score in scores.items():
-                # Example query to update user scores in MongoDB
-                # Replace 'your_collection_name' with the actual collection name
-                self.collection.update_one(
-                    {'user_id': self.user_id, 'section': section, 'difficulty': difficulty},
-                    {'$set': {'score': score}},
-                    upsert=True  
-                )
-
-    def select_questions(self, section, rem, temp):
-        # Calculate the weights based on user's performance scores
-        weights = [max(0, self.user_scores[section][difficulty]) for difficulty in ['easy', 'medium', 'difficult']]
-        total_weight = sum(weights)
-        normalized_weights = [weight / total_weight if total_weight > 0 else 1/3 for weight in weights]
-
-        selected_questions = []
-        for _ in range(rem):
-            difficulty = random.choices(['easy', 'medium', 'difficult'], weights=normalized_weights)[0]
-            eligible_questions = self.collection.find({'section': section, 'difficulty': difficulty, 'questionID': {'$nin': temp}})
-            if eligible_questions.count() > 0:
-                question_id = random.choice([doc['questionID'] for doc in eligible_questions])
-                selected_questions.append(question_id)
-                temp.append(question_id)
-        return selected_questions
-
-    def process_responses(self, section, responses):
-        for response in responses:
-            _, row = response
-            self.update_scores(section, row['difficulty'], row['response'])
-
-    def get_previous_responses_from_db(self):
-
-        self.collection = self.db['your_collection_name'] #change this
-        # Query the database to retrieve previous responses based on user_id
-        # Example implementation:
-        previous_responses = self.collection.find({'user_id': self.user_id})
+        previous_responses = self.db.prev_resp.find_one({'user_id': self.user_id})
         return previous_responses
 
-    def get_selected_question_ids(self, section):
-        temp = []
-        section_df = self.get_previous_responses_from_db().filter({'section': section})
-        wrong_responses_section = section_df.filter({'response': 'wrong'})
-        wrong_question_ids = [doc['questionID'] for doc in wrong_responses_section]
-        total_questions = 10
-        rem = total_questions - len(wrong_question_ids)
-        selected_correct_question_ids = self.select_questions(section, rem, temp)
-        return wrong_question_ids + selected_correct_question_ids
+    def get_user_score(self):
 
-    def get_selected_question_ids_by_section(self):
+        user_scores = self.db.user_scores.find_one({'user_id': self.user_id})
+        if user_scores:
+            return user_scores
+        else:
+            # Initialize user scores if not present
+            user_scores = {section: {'easy': 0, 'medium': 0, 'difficult': 0} for section in self.sections}
+            self.db.user_scores.insert_one({'user_id': self.user_id, 'scores': user_scores})
+            return user_scores
+
+    #should be called 1st    
+    def get_questions(self): #gets recommendations for each section
+
         selected_question_ids_by_section = {}
         for section in ['Section A', 'Section B']: 
             selected_question_ids_by_section[section] = self.get_selected_question_ids(section)
         return selected_question_ids_by_section
+    
+    #2
+    def get_selection_question_ids(self,section): #gives the recommendation for each section
 
-    def close_db_connection(self):
-        self.db_client.close()
+        temp = []
+        section_df = pd.DataFrame(self.get_prev().filter({'section': section}))
+        wrong_responses_section = section_df.filter({'response': 'wrong'})
+        wrong_question_ids = [doc['questionID'] for doc in wrong_responses_section]
+        total_questions = 10
+        rem = total_questions - len(wrong_question_ids)
+
+        #choosing correct reponses
+        correct_responses = section_df.filter({'response':'correct'})
+        corr_ids = [doc['questionID'] for doc in correct_responses]
+        corr_num = min(rem//2, len(corr_ids))
+        selected_correct_question_ids = random.sample(corr_ids,corr_num)
+
+        repeat_qid = wrong_question_ids + selected_correct_question_ids
+
+        rem = total_questions - len(repeat_qid)
+
+        rec_qid = self.rec_questions(rem,section)
+
+        final_questions = repeat_qid + rec_qid        
+
+        return final_questions
+    
+    #3
+    def rec_questions(self,rem,section):
+
+        self.user_scores = self.get_user_score()
+
+        easy_score = self.user_scores[section]['easy']
+        medium_score = self.user_scores[section]['medium']
+        
+
+        recommended_questions = []
+
+        if easy_score < self.threshold_easy:
+            # Recommend easy questions
+            recommended_questions.extend(self.get_questions_by_difficulty(section, 'easy', rem))
+        elif easy_score < self.threshold_medium and easy_score >= self.treshold_easy:
+            # Recommend mix of easy and medium questions
+            easy_count = min(rem // 2, len(self.get_questions_by_difficulty(section, 'easy')))
+            medium_count = rem - easy_count
+            recommended_questions.extend(self.get_questions_by_difficulty(section, 'easy', easy_count))
+            recommended_questions.extend(self.get_questions_by_difficulty(section, 'medium', medium_count))
+        elif medium_score < self.threshold_medium:
+            # Recommend mix of medium and difficult questions
+            medium_count = min(rem // 2, len(self.get_questions_by_difficulty(section, 'medium')))
+            difficult_count = rem - medium_count
+            recommended_questions.extend(self.get_questions_by_difficulty(section, 'medium', medium_count))
+            recommended_questions.extend(self.get_questions_by_difficulty(section, 'difficult', difficult_count))
+        else:
+            # Recommend difficult questions
+            recommended_questions.extend(self.get_questions_by_difficulty(section, 'difficult', rem))
+
+        return recommended_questions
+    
+    #4
+    def get_questions_by_difficulty(self, section, difficulty, count):
+        # Retrieve questions from MongoDB
+        questions = self.db.questions.find({'section': section, 'difficulty': difficulty})
+        return random.sample([question['QID'] for question in questions], min(count, questions.count()))
+    
+    #works independently 
+    # 1st call after submission
+    def update_user_scores(self):
+        # Update user scores based on responses
+        responses = [] # this needs to come from service handler
+        for question_id, response in responses.items():
+            section = self.master_questions[question_id]['section']
+            difficulty = self.master_questions[question_id]['difficulty']
+            if response == 'correct':
+                self.user_scores[section][difficulty] += 1
+            else:
+                # Penalize for wrong response
+                self.user_scores[section][difficulty] -= self.penalty
+                # Ensure scores don't go negative
+                self.user_scores[section][difficulty] = max(0, self.user_scores[section][difficulty])
+            
+            # self.db.prev_resp.find_one({'user_id': self.user_id})
+            self.db.user_scores.update_one( #may need to change the schema based on the actual implementation in the DB
+                {'user_id': self.user_id},
+                {'$set': {'user_score': self.user_score}},
+                upsert=True  
+            )
+    
 
 
-# Example usage:
-# rec_system = Rec(user_id='your_user_id')
-# selected_question_ids = rec_system.get_selected_question_ids_by_section()
-# rec_system.close_db_connection()
+
+
+
+
+
