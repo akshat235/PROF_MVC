@@ -21,13 +21,13 @@ def get_questions():
         question_details = []
         for question_id in question_ids:
             # Query MongoDB using MongoEngine to get specific fields by question ID
-            question_detail = Question.objects(question_id=question_id).only('question_body', 'options', 'difficulty', 'tag').first()
+            question_detail = Question.objects(question_id=question_id).only('question_body', 'options', 'difficulty', 'tags').first()
             if question_detail:
                 # Extract required fields from the Question document
                 question_body = question_detail.question_body
                 options = question_detail.options
                 difficulty = question_detail.difficulty
-                tag = question_detail.tag
+                tag = question_detail.tags
                 # Append question details to the list
                 question_details.append({
                     'question_id': question_id,

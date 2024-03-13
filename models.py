@@ -42,7 +42,7 @@ class Submission(Document):
 class Scores(Document):
 
     user_id = IntField(required=True)
-    section_scores = DictField()
+    section_scores = DictField(DictField())
 
     meta = {'collection': 'user_scores'}
 

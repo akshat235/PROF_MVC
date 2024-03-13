@@ -1,6 +1,7 @@
 import random
 from pymongo import MongoClient
 import pandas as pd
+from models import Submission,Question
 
 
 class rec:
@@ -11,15 +12,39 @@ class rec:
         self.treshold_easy = 25
         self.treshold_medium = 25
         self.penalty = 1
-        db_name = 'sd'#change this
+        db_name = 'PROF_MVC'#change this
         self.mongo_client = MongoClient() # add URL here
         self.db = self.mongo_client[db_name]#add db name here
 
 
     def get_prev(self):
+        
+        #need to fix this. Should retrive the last submission ofr user_id and then associate each qid with tag
+        submission = Submission.objects(userID=self.user_id).order_by('-submissionDate', '-submissionTime').first()
+        if submission:
+            response_object = {
+                'totalScore': submission.totalScore,
+                'responses': submission.responses,
+                'date': submission.submissionDate,
+                'time': submission.submissionTime,
+                'difficultyScores': submission.difficultyScores
+            }
 
-        previous_responses = self.db.prev_resp.find_one({'user_id': self.user_id})
-        return previous_responses
+        responses = pd.DataFrame.from_records(response_object.responses)
+
+        def fetch_tags(question_id):
+
+            collection = self.db['Questions']
+            query = {'questionId': question_id}
+            result = collection.find_one(query, {'tags': 1})
+            if result:
+                return result.get('tags', '')  # Assuming tags is a list field in MongoDB
+            else:
+                return ''
+
+        responses['tags'] = responses['questionId'].apply(fetch_tags)
+        
+        return responses
 
     def get_user_score(self):
 
@@ -36,7 +61,7 @@ class rec:
     def get_questions(self): #gets recommendations for each section
 
         selected_question_ids_by_section = {}
-        for section in ['Section A', 'Section B']: 
+        for section in ['Section A', 'Section B']: #add sections
             selected_question_ids_by_section[section] = self.get_selected_question_ids(section)
         return selected_question_ids_by_section
     
@@ -45,7 +70,7 @@ class rec:
 
         temp = []
         section_df = pd.DataFrame(self.get_prev().filter({'section': section}))
-        wrong_responses_section = section_df.filter({'response': 'wrong'})
+        wrong_responses_section = section_df.filter({'answer_status': 'wrong'})
         wrong_question_ids = [doc['questionID'] for doc in wrong_responses_section]
         total_questions = 10
         rem = total_questions - len(wrong_question_ids)
@@ -101,16 +126,17 @@ class rec:
     #4
     def get_questions_by_difficulty(self, section, difficulty, count):
         # Retrieve questions from MongoDB
-        questions = self.db.questions.find({'section': section, 'difficulty': difficulty})
+        questions = self.db.Questions.find({'tags': section, 'difficulty': difficulty})
         return random.sample([question['QID'] for question in questions], min(count, questions.count()))
     
     #works independently 
     # 1st call after submission
-    def update_user_scores(self):
+    def update_user_scores(self,responses):
         # Update user scores based on responses
-        responses = [] # this needs to come from service handler
+        self.master_questions = self.db.Questions.find()
+        self.user_scores = self.get_user_score()
         for question_id, response in responses.items():
-            section = self.master_questions[question_id]['section']
+            section = self.master_questions[question_id]['tags']
             difficulty = self.master_questions[question_id]['difficulty']
             if response == 'correct':
                 self.user_scores[section][difficulty] += 1
@@ -123,7 +149,7 @@ class rec:
             # self.db.prev_resp.find_one({'user_id': self.user_id})
             self.db.user_scores.update_one( #may need to change the schema based on the actual implementation in the DB
                 {'user_id': self.user_id},
-                {'$set': {'user_score': self.user_score}},
+                {'$set': {'user_score': self.user_scores}},
                 upsert=True  
             )
     

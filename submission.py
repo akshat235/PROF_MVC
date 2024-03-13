@@ -47,12 +47,12 @@ submissions_bp = Blueprint("submissions", __name__)
 def submit_response():
     data = request.json
     user_id = data.get('userID')
-    responses = data.get('responses')
+    responses = data.get('responses') # 
     if user_id is None or responses is None:
         return jsonify({'error': 'userID or responses not provided in the request body'}), 400
     try:
         total_score = 0
-        difficulty_scores = {'Easy': 0, 'Medium': 0, 'Hard': 0}
+        difficulty_scores = {'Easy': 0, 'Medium': 0, 'Hard': 0} #remove this
         # Fetch all questions first
         all_questions = Question.objects.all()
         for response in responses:
@@ -64,7 +64,7 @@ def submit_response():
                 correct_answer = question.correctAnswer
                 if selected_option == correct_answer:
                     total_score += 1
-                    difficulty_scores[question.difficulty] += 1
+                    difficulty_scores[question.difficulty] += 1 #remove this
                     response['answer_status'] = 'correct'
                 else:
                     response['answer_status'] = 'wrong'
@@ -73,10 +73,13 @@ def submit_response():
         submission = Submission(userID=user_id, 
                                 responses=responses,
                                 totalScore=total_score,
-                                difficultyScores=difficulty_scores,
+                                difficultyScores=difficulty_scores, #remove this
                                 submissionDate=current_date,
                                 submissionTime=current_time)
         submission.save()
+
+        # my_rec = rec(user_id)
+        # my_rec.update_user_scores(responses)
         return jsonify({'message': 'Response submitted successfully'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
