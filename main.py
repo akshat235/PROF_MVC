@@ -1,6 +1,6 @@
 from flask import Flask, session
-from flask_sqlalchemy import SQLAlchemy
-from auth import auth_bp
+#from flask_sqlalchemy import SQLAlchemy
+# from auth import auth_bp
 from questions import questions_bp
 from submission import submissions_bp
 from dashboard import dashboard_bp
@@ -24,10 +24,10 @@ app.config['MONGODB_SETTINGS'] = {
 
 connect(alias='default', host=app.config['MONGODB_SETTINGS']['host'], db=app.config['MONGODB_SETTINGS']['db'])
 
-app.register_blueprint(auth_bp, url_prefix='/auth')
+# app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(questions_bp, url_prefix='/questions')
 app.register_blueprint(submissions_bp, url_prefix='/submissions')
 app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
  
 if __name__ == '__main__':
-   app.run(debug=True)
+   app.run()

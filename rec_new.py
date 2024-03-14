@@ -17,9 +17,36 @@ class rec:
 
 
     def get_prev(self):
+        
+        #need to fix this. Should retrive the last submission ofr user_id and then associate each qid with tag
+        # submission = Submission.objects(userID=self.user_id)
+        # submission = self.db['TestSubmissions'].find({'userID':self.user_id})
 
-        previous_responses = self.db.prev_resp.find_one({'user_id': self.user_id})
-        return previous_responses
+        query = {'userID': self.user_id}
+
+        projection = {'responses': 1, 'submissionDate': 1, 'submissionTime': 1,'_id':0}
+        sort_order = [('submissionDate', pymongo.DESCENDING), ('submissionTime', pymongo.DESCENDING)]
+        submission =  self.db['TestSubmissions'].find_one(query, projection,sort = sort_order)
+
+        # submission = Submission.objects()
+        if submission:
+            response_object = [(resp['questionID'], resp.get('answer_status', None)) for resp in submission['responses']]
+
+        responses = pd.DataFrame(response_object['responses'])
+
+        def fetch_tags(question_id):
+
+            collection = self.db['Questions']
+            query = {'questionId': question_id}
+            result = collection.find_one(query, {'tags': 1})
+            if result:
+                return result.get('tags', '')  # Assuming tags is a list field in MongoDB
+            else:
+                return ''
+
+        responses['section'] = responses['questionID'].apply(fetch_tags)
+        
+        return responses
 
     def get_user_score(self):
 

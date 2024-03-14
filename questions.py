@@ -24,7 +24,7 @@ def get_questions():
             question_detail = Question.objects(question_id=question_id).only('question_body', 'options', 'difficulty', 'tags').first()
             if question_detail:
                 # Extract required fields from the Question document
-                question_body = question_detail.question_body
+                question_body = question_detail.questionBody
                 options = question_detail.options
                 difficulty = question_detail.difficulty
                 tag = question_detail.tags
@@ -39,6 +39,7 @@ def get_questions():
 
         return jsonify(question_details), 200
     except Exception as e:
+        print(str(e))
         return jsonify({'error': str(e)}), 500
 
 
