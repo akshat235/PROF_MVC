@@ -63,20 +63,21 @@ class rec:
     def get_user_score(self):
 
         user_scores = self.db.user_scores.find_one({'user_id': self.user_id},{'section_scores':1})
+        user_scores = user_scores['section_scores']
         if user_scores:
             return user_scores
         else:
             # Initialize user scores if not present
             user_scores = {section: {'easy': 0, 'medium': 0, 'difficult': 0} for section in self.sections}
-            self.db.user_scores.insert_one({'user_id': self.user_id, 'scores': user_scores})
+            self.db.user_scores.insert_one({'user_id': self.user_id, 'section_scores': user_scores})
             return user_scores
 
     #should be called 1st    
     def get_questions(self): #gets recommendations for each section
 
-        selected_question_ids_by_section = {}
+        selected_question_ids_by_section = []
         for section in ['Section A', 'Section B']: #add sections
-            selected_question_ids_by_section[section] = self.get_selection_question_ids(section)
+            selected_question_ids_by_section.append(self.get_selection_question_ids(section))
         return selected_question_ids_by_section
     
     #2
@@ -153,11 +154,15 @@ class rec:
     
     #works independently 
     # 1st call after submission
-    def update_user_scores(self,responses):
+    def update_user_scores(self,responses): 
         # Update user scores based on responses
         self.master_questions = self.db.Questions.find()
+        print(responses)
         self.user_scores = self.get_user_score()
-        for question_id, response in responses.items():
+        for response in responses:
+
+            question_id = response['question_id']
+            response = response['answer_status']
             section = self.master_questions[question_id]['tags']
             difficulty = self.master_questions[question_id]['difficulty']
             if response == 'correct':
@@ -171,7 +176,7 @@ class rec:
             # self.db.prev_resp.find_one({'user_id': self.user_id})
             self.db.user_scores.update_one( #may need to change the schema based on the actual implementation in the DB
                 {'user_id': self.user_id},
-                {'$set': {'user_score': self.user_scores}},
+                {'$set': {'section_scores': self.user_scores}},
                 upsert=True  
             )
     

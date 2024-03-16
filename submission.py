@@ -1,6 +1,7 @@
 from flask import jsonify, request, Blueprint
-from models import Submission, Question  
+from models import Submission, Question 
 from datetime import datetime
+from rec import rec
 
 
 
@@ -48,14 +49,19 @@ def submit_response():
     data = request.json
     user_id = data.get('userID')
     responses = data.get('responses') # 
+    rec_resp = []
+    
+    
+
     if user_id is None or responses is None:
         return jsonify({'error': 'userID or responses not provided in the request body'}), 400
     try:
-        total_score = 0
-        difficulty_scores = {'Easy': 0, 'Medium': 0, 'Hard': 0} #remove this
+        # total_score = 0
+        # difficulty_scores = {'Easy': 0, 'Medium': 0, 'Hard': 0} #remove this
         # Fetch all questions first
         all_questions = Question.objects.all()
         for response in responses:
+            
             question_id = int(response.get('questionID'))
             selected_option = response.get('selectedOption')
             tags = response.get('tags')
@@ -63,23 +69,32 @@ def submit_response():
             if question:
                 correct_answer = question.correctAnswer
                 if selected_option == correct_answer:
-                    total_score += 1
-                    difficulty_scores[question.difficulty] += 1 #remove this
+                    # total_score += 1
+                    # difficulty_scores[question.difficulty] += 1 #remove this
                     response['answer_status'] = 'correct'
                 else:
                     response['answer_status'] = 'wrong'
+
+                rec_resp.append(
+                    {
+                        'question_id' : question_id,
+                        'answer_status': response['answer_status']
+                    }
+                )
+            
         current_date = datetime.now().strftime('%Y-%m-%d')
         current_time = datetime.now().strftime('%H:%M:%S')
         submission = Submission(userID=user_id, 
                                 responses=responses,
-                                totalScore=total_score,
-                                difficultyScores=difficulty_scores, #remove this
+                                # totalScore=total_score,
+                                # difficultyScores=difficulty_scores, #remove this
                                 submissionDate=current_date,
                                 submissionTime=current_time)
         submission.save()
 
-        # my_rec = rec(user_id)
-        # my_rec.update_user_scores(responses)
+        
+        my_rec = rec(user_id)
+        my_rec.update_user_scores(rec_resp)
         return jsonify({'message': 'Response submitted successfully'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500

@@ -46,3 +46,6 @@ class Scores(Document):
 
     meta = {'collection': 'user_scores'}
 
+
+
+

@@ -17,25 +17,31 @@ def get_questions():
 
 
         question_ids = my_rec.get_questions()
+
+        sections = ['Section A','Section B']
         
         question_details = []
-        for question_id in question_ids:
-            # Query MongoDB using MongoEngine to get specific fields by question ID
-            question_detail = Question.objects(question_id=question_id).only('question_body', 'options', 'difficulty', 'tags').first()
-            if question_detail:
-                # Extract required fields from the Question document
-                question_body = question_detail.questionBody
-                options = question_detail.options
-                difficulty = question_detail.difficulty
-                tag = question_detail.tags
-                # Append question details to the list
-                question_details.append({
-                    'question_id': question_id,
-                    'question_body': question_body,
-                    'options': options,
-                    'difficulty': difficulty,
-                    'tag': tag
-                })
+
+        for sec in question_ids: 
+            for question_id in sec:
+                # Query MongoDB using MongoEngine to get specific fields by question ID
+                question_detail = Question.objects(__raw__ = {'questionId' : 10}).only('questionBody', 'options', 'difficulty', 'tags')
+                if question_detail:
+        # Extract required fields from the Question document
+
+                    for question in question_detail:
+                        question_body = question.questionBody
+                        options = question.options
+                        difficulty = question.difficulty
+                        tag = question.tags
+                        # Append question details to the list
+                        question_details.append({
+                            'question_id': question_id,
+                            'question_body': question_body,
+                            'options': options,
+                            'difficulty': difficulty,
+                            'tag': tag
+                        })
 
         return jsonify(question_details), 200
     except Exception as e:
