@@ -29,9 +29,21 @@ class Question(Document):
     meta = {'collection': 'Questions'}
 
 
+# class Submission(Document):
+#     userID = IntField(required=True)
+#     responses = ListField(DictField(), required=True)
+#     totalScore = IntField()
+#     difficultyScores = DictField()
+#     submissionDate = StringField()
+#     submissionTime = StringField()
+    
+#     meta = {'collection': 'TestSubmissions'}
+
+
 class Submission(Document):
     userID = IntField(required=True)
     responses = ListField(DictField(), required=True)
+    tagScores = DictField()  # New field to store tag scores
     totalScore = IntField()
     difficultyScores = DictField()
     submissionDate = StringField()

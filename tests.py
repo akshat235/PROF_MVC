@@ -64,29 +64,36 @@ import requests
 # get_question(1)
 
 
-import requests
-import json
 
-BASE_URL = 'http://127.0.0.1:5000/submissions/submit-response'
+# import requests
+# import json
+# import traceback
 
-def submit_response(user_id, responses):
-    data = {'userID': user_id, 'responses': responses}
-    response = requests.post(BASE_URL, json=data)
-    if response.status_code == 201:
-        print("Response submitted successfully")
-        submission_data = response.json().get('submission')
-        print("Submission details:")
-        print(json.dumps(submission_data, indent=4))
-    else:
-        print("Error:", response.json())
-user_id = "654321"
-responses = [
-    {"questionID": 1, "selectedOption": "Mg + O2 → MgO", "difficulty": "Easy"},
-    {"questionID": 2, "selectedOption": "11", "difficulty": "Medium"},
-    {"questionID": 18, "selectedOption": "11", "difficulty": "Hard"},
-    {"questionID": 10, "selectedOption": "J.K. Rowling", "difficulty": "Easy"}
-]
-submit_response(user_id, responses)
+# BASE_URL = 'http://127.0.0.1:5000/submissions/submit-response'
+
+# def submit_response(user_id, responses):
+#     data = {'userID': user_id, 'responses': responses}
+#     try:
+#         response = requests.post(BASE_URL, json=data)
+#         if response.status_code == 201:
+#             print("Response submitted successfully")
+#             submission_data = response.json().get('submission')
+#             print("Submission details:")
+#             print(json.dumps(submission_data, indent=4))
+#         else:
+#             print("ErrOOor:", response.json())
+#     except Exception as e:
+#         print("An error occurred:", str(e))
+#         traceback.print_exc()
+
+# user_id = "654321"
+# responses = [
+#     {"questionID": 1, "selectedOption": "Mg + O2 → MgO", "difficulty": "Easy"},
+#     {"questionID": 2, "selectedOption": "11", "difficulty": "Medium"},
+#     {"questionID": 18, "selectedOption": "11", "difficulty": "Hard"},
+#     {"questionID": 10, "selectedOption": "J.K. Rowling", "difficulty": "Easy"}
+# ]
+# submit_response(user_id, responses)
 
 
 
@@ -258,3 +265,11 @@ submit_response(user_id, responses)
 
 # print(response.status_code)
 # print(response.json())
+
+import requests
+base_url = "http://127.0.0.1:5000/dashboard/latest-submissions-for-class"
+def test_latest_submissions_for_class(class_id):
+    url = f"{base_url}?class_id={class_id}"
+    response = requests.get(url)
+    print(response.json())
+test_latest_submissions_for_class("54321")

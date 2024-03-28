@@ -62,3 +62,36 @@ def remove_email():
     with open(file_path, 'w') as file:
         file.writelines(emails)
     return jsonify({'message': 'Email removed successfully'}), 200
+
+
+
+
+    
+@dashboard_bp.route('/latest-submissions-for-class', methods=['GET'])
+def latest_submissions_for_class():
+    class_id = request.args.get('class_id')
+    if class_id is None:
+        return jsonify({'error': 'class_id not provided in the request'}), 400
+    try:
+        users = User.objects(classID=class_id)
+        all_submissions = []
+        for user in users:
+            latest_submission = Submission.objects(userID=user.userID).order_by('-submissionDate', '-submissionTime').first()
+            if latest_submission:
+                submission_details = {
+                    'latest_submission': {
+                        'userID': latest_submission.userID,
+                        'responses': latest_submission.responses,
+                        'tagScores': latest_submission.tagScores,
+                        'total_score': latest_submission.totalScore,
+                        'difficulty_scores': latest_submission.difficultyScores,
+                        'submissionDate': latest_submission.submissionDate,
+                        'submissionTime': latest_submission.submissionTime
+                    }
+                }
+                all_submissions.append(submission_details)
+        return jsonify({'message': 'Latest submissions for class retrieved successfully', 'submissions': all_submissions}), 200
+
+    except Exception as e:
+        print(str(e))
+        return jsonify({'error': str(e)}), 500
